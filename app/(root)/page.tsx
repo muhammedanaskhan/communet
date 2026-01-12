@@ -1,17 +1,16 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchPosts, getReactionsData } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
-import { UserButton } from "@clerk/nextjs";
-import { ClerkProvider } from '@clerk/nextjs'
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
 
-  const result = await fetchPosts(1, 20);
   const user = await currentUser();
 
-  if(!user) return null;
+  if(!user) redirect('/sign-in');
+
+  const result = await fetchPosts(1, 20);
 
   const userInfo = await fetchUser(user.id);
   if(!userInfo?.onboarded) redirect('/onboarding');
